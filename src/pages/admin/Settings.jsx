@@ -1,0 +1,137 @@
+import { useEffect, useState } from 'react';
+import { FiDollarSign, FiSave, FiInfo } from 'react-icons/fi';
+import { getConnectionFee, updateConnectionFee } from '../../services/adminService';
+import toast from 'react-hot-toast';
+
+const formatPrice = (amount) => new Intl.NumberFormat('en-NG').format(amount);
+
+const Settings = () => {
+  const [fee, setFee] = useState('');
+  const [currentFee, setCurrentFee] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const data = await getConnectionFee();
+        const feeValue = data?.connection_fee || 15000;
+        setCurrentFee(parseInt(feeValue));
+        setFee(String(feeValue));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetch();
+  }, []);
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const newFee = parseInt(fee);
+    if (!newFee || newFee <= 0) {
+      toast.error('Please enter a valid amount');
+      return;
+    }
+    setSaving(true);
+    try {
+      await updateConnectionFee(newFee);
+      setCurrentFee(newFee);
+      toast.success('Connection fee updated successfully');
+    } catch (err) {
+      toast.error('Failed to update fee');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-2xl mx-auto space-y-6">
+        {[...Array(2)].map((_, i) => <div key={i} className="bg-white rounded-2xl p-6 animate-pulse"><div className="h-32" /></div>)}
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-navy-900">Settings</h1>
+        <p className="text-gray-500 text-sm mt-1">Manage platform settings</p>
+      </div>
+
+      {/* Connection Fee */}
+      <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center">
+            <FiDollarSign className="text-primary-500 text-lg" />
+          </div>
+          <div>
+            <h2 className="font-bold text-navy-900">Connection Fee</h2>
+            <p className="text-xs text-gray-500">The fee tenants pay to connect with landlords</p>
+          </div>
+        </div>
+
+        <div className="bg-navy-50 rounded-xl p-4 mb-6">
+          <p className="text-sm text-gray-600 mb-1">Current Fee</p>
+          <p className="text-3xl font-bold text-navy-900">{'\u20A6'}{formatPrice(currentFee)}</p>
+        </div>
+
+        <form onSubmit={handleUpdate}>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">New Connection Fee ({'\u20A6'})</label>
+          <div className="flex gap-3">
+            <input
+              type="number"
+              value={fee}
+              onChange={(e) => setFee(e.target.value)}
+              placeholder="15000"
+              className="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+            />
+            <button
+              type="submit"
+              disabled={saving}
+              className="inline-flex items-center gap-2 bg-primary-400 hover:bg-primary-500 text-white px-6 py-3 rounded-xl text-sm font-medium transition-all border-0 cursor-pointer disabled:opacity-60"
+            >
+              <FiSave /> {saving ? 'Saving...' : 'Update'}
+            </button>
+          </div>
+        </form>
+
+        <div className="flex items-start gap-2 mt-4 bg-blue-50 rounded-xl p-3">
+          <FiInfo className="text-blue-500 mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-blue-700">Changes to the connection fee will apply to all new connections. Existing connections are not affected.</p>
+        </div>
+      </div>
+
+      {/* Platform Info */}
+      <div className="bg-white rounded-2xl shadow-sm p-6">
+        <h2 className="font-bold text-navy-900 mb-4">Platform Information</h2>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <span className="text-sm text-gray-600">Platform Name</span>
+            <span className="text-sm font-medium text-navy-900">DirectKey</span>
+          </div>
+          <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <span className="text-sm text-gray-600">Version</span>
+            <span className="text-sm font-medium text-navy-900">1.0.0</span>
+          </div>
+          <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <span className="text-sm text-gray-600">Admin Email</span>
+            <span className="text-sm font-medium text-navy-900">admin@directkey.com</span>
+          </div>
+          <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <span className="text-sm text-gray-600">Payment Provider</span>
+            <span className="text-sm font-medium text-navy-900">Paystack (Mock)</span>
+          </div>
+          <div className="flex items-center justify-between py-2">
+            <span className="text-sm text-gray-600">Database</span>
+            <span className="text-sm font-medium text-navy-900">Supabase (Mock Data)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Settings;
