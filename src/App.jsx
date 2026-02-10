@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAdminAuth } from './contexts/AuthContext';
 import Sidebar from './components/Sidebar';
+import ScrollToTop from './components/ScrollToTop';
+import BackToTop from './components/BackToTop';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
 import Approvals from './pages/admin/Approvals';
@@ -45,6 +47,7 @@ const PublicRoute = ({ children }) => {
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <AuthProvider>
         <Toaster position="top-right" toastOptions={{ duration: 3000, style: { borderRadius: '12px', fontSize: '14px' } }} />
         <Routes>
@@ -61,6 +64,7 @@ function App() {
 
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
+        <BackToTop />
       </AuthProvider>
     </Router>
   );
