@@ -129,4 +129,18 @@ const Testimonials = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Rating</label>
                   <div className="flex gap-2">
                     {[1,2,3,4,5].map(n => (
-                      <button key={n} type="button" onClick={() => setForm(p => ({ ...p, rating: n }))} className={`w-10 h-10 rounded-lg border-0 cursor-pointer flex items-center justify-center text-sm font-bold transition-all ${form.rating >= n ? 'bg-yellow-400 text-white' : 
+                      <button key={n} type="button" onClick={() => setForm(p => ({ ...p, rating: n }))} className={`w-10 h-10 rounded-lg border-0 cursor-pointer flex items-center justify-center text-sm font-bold transition-all ${form.rating >= n ? 'bg-yellow-400 text-white' : 'bg-gray-100 text-gray-400'}`}>{n}</button>
+                    ))}
+                  </div>
+                </div>
+                <button onClick={handleSave} className="w-full bg-primary-400 hover:bg-primary-500 text-white py-3 rounded-xl font-semibold text-sm border-0 cursor-pointer transition-all">{editing ? 'Update' : 'Add'} Testimonial</button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export default Testimonials;

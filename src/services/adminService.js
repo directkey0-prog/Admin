@@ -48,6 +48,40 @@ const allTransactions = [
 
 let connectionFee = 15000;
 
+// Messages dummy data
+let allMessages = [
+  { id: 'm1', name: 'Adebayo Ogunlesi', email: 'adebayo@gmail.com', phone: '+2348034521890', subject: 'Property Listing Issue', message: 'I submitted my property listing 3 days ago and it still shows as pending. Can you please review it? The property is a 3-bedroom apartment in Lekki Phase 1.', is_read: false, created_at: '2026-02-10T14:30:00Z' },
+  { id: 'm2', name: 'Chioma Nwosu', email: 'chioma.n@gmail.com', phone: '+2348055678901', subject: 'Payment Issue', message: 'I paid the connection fee but did not receive the landlord contact details. My payment reference is DK-20260209-001. Please help resolve this.', is_read: false, created_at: '2026-02-09T10:00:00Z' },
+  { id: 'm3', name: 'Ibrahim Musa', email: 'ibrahim.m@yahoo.com', phone: '+2348091234567', subject: 'Account Problem', message: 'I am unable to log in to my landlord account. I have tried resetting my password but the email is not coming through.', is_read: true, created_at: '2026-02-08T16:45:00Z' },
+  { id: 'm4', name: 'Funke Akindele', email: 'funke.a@outlook.com', phone: '+2348012345678', subject: 'Feature Request', message: 'It would be great if tenants could schedule viewings directly through the platform instead of having to call the landlord separately.', is_read: true, created_at: '2026-02-07T09:20:00Z' },
+  { id: 'm5', name: 'Emeka Obi', email: 'emeka.obi@gmail.com', phone: '+2348067890123', subject: 'Report a Bug', message: 'The property filter is not working correctly on mobile. When I select Lagos state, the LGA dropdown shows Abuja LGAs instead.', is_read: false, created_at: '2026-02-06T11:00:00Z' },
+  { id: 'm6', name: 'Aisha Bello', email: 'aisha.b@gmail.com', phone: null, subject: 'General Inquiry', message: 'Hello, I want to know if DirectKey is available in Kano state. I am looking for a 2-bedroom apartment in Nassarawa GRA area.', is_read: true, created_at: '2026-02-05T13:15:00Z' },
+];
+
+// Testimonials dummy data
+let allTestimonials = [
+  { id: 'test1', customer_name: 'Adebayo Ogunlesi', customer_title: 'Tenant in Lagos', testimonial_text: 'DirectKey made finding an apartment in Lekki so easy. I connected directly with the landlord and moved in within a week. No agent wahala!', rating: 5, is_active: true },
+  { id: 'test2', customer_name: 'Chioma Nwosu', customer_title: 'Tenant in Abuja', testimonial_text: 'I was skeptical at first, but the connection fee is totally worth it. Got a verified landlord contact and the apartment was exactly as listed.', rating: 5, is_active: true },
+  { id: 'test3', customer_name: 'Ibrahim Musa', customer_title: 'Landlord in Kano', testimonial_text: 'As a landlord, DirectKey brings me serious tenants only. No more time wasters. My properties get rented faster now.', rating: 4, is_active: true },
+  { id: 'test4', customer_name: 'Funke Akindele', customer_title: 'Tenant in Oyo', testimonial_text: 'Found a beautiful 3-bedroom duplex in Bodija through DirectKey. The process was smooth and transparent from start to finish.', rating: 5, is_active: true },
+  { id: 'test5', customer_name: 'Emeka Obi', customer_title: 'Landlord in Enugu', testimonial_text: 'Listing my properties on DirectKey has been great for business. The admin team reviews everything quickly and my listings go live fast.', rating: 4, is_active: false },
+  { id: 'test6', customer_name: 'Aisha Bello', customer_title: 'Tenant in Rivers', testimonial_text: 'Relocated to Port Harcourt and needed a place urgently. DirectKey helped me find and connect with a landlord the same day!', rating: 5, is_active: true },
+];
+
+// Newsletter subscribers dummy data
+let allSubscribers = [
+  { id: 'sub1', email: 'adebayo@gmail.com', is_active: true, subscribed_at: '2025-11-01T10:00:00Z' },
+  { id: 'sub2', email: 'chioma.n@gmail.com', is_active: true, subscribed_at: '2025-11-15T14:00:00Z' },
+  { id: 'sub3', email: 'ibrahim.m@yahoo.com', is_active: true, subscribed_at: '2025-12-01T09:00:00Z' },
+  { id: 'sub4', email: 'funke.a@outlook.com', is_active: true, subscribed_at: '2025-12-10T16:00:00Z' },
+  { id: 'sub5', email: 'emeka.obi@gmail.com', is_active: false, subscribed_at: '2025-12-20T11:00:00Z' },
+  { id: 'sub6', email: 'aisha.b@gmail.com', is_active: true, subscribed_at: '2026-01-05T08:00:00Z' },
+  { id: 'sub7', email: 'david.o@yahoo.com', is_active: true, subscribed_at: '2026-01-10T12:00:00Z' },
+  { id: 'sub8', email: 'grace.okoro@gmail.com', is_active: true, subscribed_at: '2026-01-15T15:00:00Z' },
+  { id: 'sub9', email: 'baba.salami@yahoo.com', is_active: true, subscribed_at: '2026-01-20T10:00:00Z' },
+  { id: 'sub10', email: 'seun.dada@gmail.com', is_active: true, subscribed_at: '2026-02-01T09:00:00Z' },
+];
+
 // Auth
 export const adminLogin = async (email, password) => {
   await delay(800);
@@ -138,5 +172,62 @@ export const getConnectionFee = async () => {
 export const updateConnectionFee = async (fee) => {
   if (USE_DUMMY_DATA) { await delay(600); connectionFee = parseInt(fee); return { success: true }; }
   const res = await fetch(`${API_BASE}/settings/connection-fee`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ connection_fee: fee }) });
+  return res.json();
+};
+
+// Messages
+export const getMessages = async () => {
+  if (USE_DUMMY_DATA) { await delay(500); return [...allMessages]; }
+  const res = await fetch(`${API_BASE}/admin/messages`);
+  return res.json();
+};
+
+export const markMessageAsRead = async (id) => {
+  if (USE_DUMMY_DATA) { await delay(300); const idx = allMessages.findIndex(m => m.id === id); if (idx !== -1) allMessages[idx].is_read = true; return { success: true }; }
+  const res = await fetch(`${API_BASE}/admin/messages/${id}/read`, { method: 'PUT' });
+  return res.json();
+};
+
+export const deleteMessage = async (id) => {
+  if (USE_DUMMY_DATA) { await delay(300); allMessages = allMessages.filter(m => m.id !== id); return { success: true }; }
+  const res = await fetch(`${API_BASE}/admin/messages/${id}`, { method: 'DELETE' });
+  return res.json();
+};
+
+// Testimonials
+export const getTestimonials = async () => {
+  if (USE_DUMMY_DATA) { await delay(500); return [...allTestimonials]; }
+  const res = await fetch(`${API_BASE}/admin/testimonials`);
+  return res.json();
+};
+
+export const createTestimonial = async (data) => {
+  if (USE_DUMMY_DATA) { await delay(500); const newT = { id: 'test' + Date.now(), ...data, is_active: true }; allTestimonials.push(newT); return newT; }
+  const res = await fetch(`${API_BASE}/admin/testimonials`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+  return res.json();
+};
+
+export const updateTestimonial = async (id, data) => {
+  if (USE_DUMMY_DATA) { await delay(400); const idx = allTestimonials.findIndex(t => t.id === id); if (idx !== -1) allTestimonials[idx] = { ...allTestimonials[idx], ...data }; return { success: true }; }
+  const res = await fetch(`${API_BASE}/admin/testimonials/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+  return res.json();
+};
+
+export const deleteTestimonial = async (id) => {
+  if (USE_DUMMY_DATA) { await delay(300); allTestimonials = allTestimonials.filter(t => t.id !== id); return { success: true }; }
+  const res = await fetch(`${API_BASE}/admin/testimonials/${id}`, { method: 'DELETE' });
+  return res.json();
+};
+
+// Newsletter Subscribers
+export const getSubscribers = async () => {
+  if (USE_DUMMY_DATA) { await delay(500); return [...allSubscribers]; }
+  const res = await fetch(`${API_BASE}/admin/newsletter/subscribers`);
+  return res.json();
+};
+
+export const removeSubscriber = async (id) => {
+  if (USE_DUMMY_DATA) { await delay(300); allSubscribers = allSubscribers.filter(s => s.id !== id); return { success: true }; }
+  const res = await fetch(`${API_BASE}/admin/newsletter/subscribers/${id}`, { method: 'DELETE' });
   return res.json();
 };

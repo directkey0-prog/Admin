@@ -10,7 +10,11 @@ import Approvals from './pages/admin/Approvals';
 import Properties from './pages/admin/Properties';
 import Users from './pages/admin/Users';
 import Transactions from './pages/admin/Transactions';
+import Messages from './pages/admin/Messages';
+import Testimonials from './pages/admin/Testimonials';
+import Newsletter from './pages/admin/Newsletter';
 import Settings from './pages/admin/Settings';
+import Footer from './components/Footer';
 
 const ProtectedLayout = () => {
   const { admin, loading } = useAdminAuth();
@@ -28,11 +32,14 @@ const ProtectedLayout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Sidebar />
-      <main className="lg:ml-64 min-h-screen p-6 pt-16 lg:pt-6">
+      <main className="lg:ml-64 flex-1 p-6 pt-16 lg:pt-6">
         <Outlet />
       </main>
+      <div className="lg:ml-64">
+        <Footer />
+      </div>
     </div>
   );
 };
@@ -59,6 +66,9 @@ function App() {
             <Route path="/properties" element={<Properties />} />
             <Route path="/users" element={<Users />} />
             <Route path="/transactions" element={<Transactions />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
 
