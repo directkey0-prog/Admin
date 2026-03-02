@@ -15,7 +15,7 @@ const BackToTop = () => {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-6 left-6 z-50 w-11 h-11 bg-navy-900 hover:bg-navy-800 text-white rounded-full flex items-center justify-center shadow-lg transition-all border-0 cursor-pointer opacity-80 hover:opacity-100"
+      className="fixed bottom-24 right-6 z-50 w-11 h-11 bg-navy-900 hover:bg-navy-800 text-white rounded-full flex items-center justify-center shadow-lg transition-all border-0 cursor-pointer opacity-80 hover:opacity-100"
       aria-label="Back to top"
     >
       <FiChevronUp className="text-lg" />

@@ -10,10 +10,10 @@ import Approvals from './pages/admin/Approvals';
 import Properties from './pages/admin/Properties';
 import Users from './pages/admin/Users';
 import Transactions from './pages/admin/Transactions';
-import Messages from './pages/admin/Messages';
 import Testimonials from './pages/admin/Testimonials';
 import Newsletter from './pages/admin/Newsletter';
 import Settings from './pages/admin/Settings';
+import AddProperty from './pages/admin/AddProperty';
 import Footer from './components/Footer';
 
 const ProtectedLayout = () => {
@@ -66,10 +66,10 @@ function App() {
             <Route path="/properties" element={<Properties />} />
             <Route path="/users" element={<Users />} />
             <Route path="/transactions" element={<Transactions />} />
-            <Route path="/messages" element={<Messages />} />
             <Route path="/testimonials" element={<Testimonials />} />
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/add-property" element={<AddProperty />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

@@ -99,6 +99,28 @@ export const getAllProperties = async () => {
   return res.json();
 };
 
+export const createAdminProperty = async (data) => {
+  if (USE_DUMMY_DATA) {
+    await delay(800);
+    const newProp = {
+      id: 'p' + Date.now(),
+      ...data,
+      landlord: { full_name: 'DirectKey Admin', email: 'admin@directkey.com' },
+      property_images: (data.images || []).map(url => ({ image_url: url })),
+      views_count: 0,
+      created_at: new Date().toISOString(),
+    };
+    allProperties.unshift(newProp);
+    return newProp;
+  }
+  const res = await fetch(`${API_BASE}/admin/properties`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+};
+
 export const getPendingProperties = async () => {
   if (USE_DUMMY_DATA) { await delay(500); return allProperties.filter(p => p.status === 'pending'); }
   const res = await fetch(`${API_BASE}/admin/properties/pending`);

@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FiGrid, FiCheckSquare, FiHome, FiUsers, FiDollarSign, FiSettings, FiLogOut, FiMenu, FiX, FiShield, FiMail, FiStar, FiSend } from 'react-icons/fi';
+import { FiGrid, FiCheckSquare, FiHome, FiUsers, FiDollarSign, FiSettings, FiLogOut, FiMenu, FiX, FiShield, FiStar, FiSend, FiPlusSquare } from 'react-icons/fi';
 import { useState } from 'react';
 import { useAdminAuth } from '../contexts/AuthContext';
 
@@ -7,9 +7,9 @@ const navItems = [
   { name: 'Dashboard', path: '/dashboard', icon: FiGrid },
   { name: 'Pending Approvals', path: '/pending', icon: FiCheckSquare },
   { name: 'All Properties', path: '/properties', icon: FiHome },
+  { name: 'Add Property', path: '/add-property', icon: FiPlusSquare },
   { name: 'Users', path: '/users', icon: FiUsers },
   { name: 'Transactions', path: '/transactions', icon: FiDollarSign },
-  { name: 'Messages', path: '/messages', icon: FiMail },
   { name: 'Testimonials', path: '/testimonials', icon: FiStar },
   { name: 'Newsletter', path: '/newsletter', icon: FiSend },
   { name: 'Settings', path: '/settings', icon: FiSettings },
