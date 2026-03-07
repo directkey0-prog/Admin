@@ -32,12 +32,13 @@ const Login = () => {
       <Toaster position="top-right" />
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-primary-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <FiKey className="text-white text-3xl" />
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <img src="/DIRECTKEYLOGO.png" alt="DirectKey" className="h-12 w-auto" />
+            <span className="text-2xl font-bold text-white">
+              Direct<span className="text-primary-400">Key</span>
+            </span>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-1">
-            Direct<span className="text-primary-400">Key</span> Admin
-          </h1>
+          <h1 className="text-xl font-bold text-white mb-1">Admin Panel</h1>
           <div className="flex items-center justify-center gap-1.5 mt-2">
             <FiShield className="text-primary-400 text-sm" />
             <p className="text-sm text-gray-400">Admin Control Panel</p>

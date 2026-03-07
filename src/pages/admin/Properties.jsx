@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiHome, FiSearch, FiEye } from 'react-icons/fi';
+import { FiHome, FiSearch } from 'react-icons/fi';
 import { getAllProperties } from '../../services/adminService';
 
 const formatPrice = (amount) => new Intl.NumberFormat('en-NG').format(amount);
@@ -84,7 +84,6 @@ const Properties = () => {
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase hidden lg:table-cell">Landlord</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Price/Year</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">Views</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -114,9 +113,6 @@ const Properties = () => {
                       <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${statusConfig[prop.status]?.bg || 'bg-gray-100 text-gray-700'}`}>
                         {statusConfig[prop.status]?.label || prop.status}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 hidden sm:table-cell">
-                      <span className="flex items-center gap-1 text-sm text-gray-500"><FiEye className="text-xs" /> {prop.views_count || 0}</span>
                     </td>
                   </tr>
                 ))}

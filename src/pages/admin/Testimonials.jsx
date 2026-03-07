@@ -4,7 +4,7 @@ import { FiStar, FiPlus, FiEdit2, FiTrash2, FiX } from 'react-icons/fi';
 import { getTestimonials, createTestimonial, updateTestimonial, deleteTestimonial } from '../../services/adminService';
 import toast from 'react-hot-toast';
 
-const emptyForm = { customer_name: '', customer_title: '', testimonial_text: '', rating: 5 };
+const emptyForm = { customer_name: '', customer_title: '', customer_location: '', testimonial_text: '', rating: 5 };
 
 const Testimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -28,7 +28,7 @@ const Testimonials = () => {
   }, []);
 
   const openNew = () => { setEditing(null); setForm(emptyForm); setShowModal(true); };
-  const openEdit = (t) => { setEditing(t); setForm({ customer_name: t.customer_name, customer_title: t.customer_title, testimonial_text: t.testimonial_text, rating: t.rating }); setShowModal(true); };
+  const openEdit = (t) => { setEditing(t); setForm({ customer_name: t.customer_name, customer_title: t.customer_title, customer_location: t.customer_location || '', testimonial_text: t.testimonial_text, rating: t.rating }); setShowModal(true); };
 
   const handleSave = async () => {
     if (!form.customer_name || !form.customer_title || !form.testimonial_text) {
@@ -106,6 +106,7 @@ const Testimonials = () => {
               <div>
                 <p className="text-sm font-semibold text-navy-900">{t.customer_name}</p>
                 <p className="text-xs text-gray-500">{t.customer_title}</p>
+                {t.customer_location && <p className="text-xs text-primary-400 mt-0.5">{t.customer_location}</p>}
               </div>
             </motion.div>
           ))}
@@ -123,7 +124,8 @@ const Testimonials = () => {
               </div>
               <div className="space-y-4">
                 <input type="text" value={form.customer_name} onChange={(e) => setForm(p => ({ ...p, customer_name: e.target.value }))} placeholder="Customer name" className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400" />
-                <input type="text" value={form.customer_title} onChange={(e) => setForm(p => ({ ...p, customer_title: e.target.value }))} placeholder="Title (e.g., Tenant in Lagos)" className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400" />
+                <input type="text" value={form.customer_title} onChange={(e) => setForm(p => ({ ...p, customer_title: e.target.value }))} placeholder="Title (e.g., Tenant, Landlord)" className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400" />
+                <input type="text" value={form.customer_location} onChange={(e) => setForm(p => ({ ...p, customer_location: e.target.value }))} placeholder="Location (e.g., Lekki, Lagos)" className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400" />
                 <textarea value={form.testimonial_text} onChange={(e) => setForm(p => ({ ...p, testimonial_text: e.target.value }))} rows={4} placeholder="Testimonial text..." className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400" />
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Rating</label>

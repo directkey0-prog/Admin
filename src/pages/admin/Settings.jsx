@@ -61,15 +61,15 @@ const Settings = () => {
         <p className="text-gray-500 text-sm mt-1">Manage platform settings</p>
       </div>
 
-      {/* Connection Fee */}
+      {/* Digital Key Fee */}
       <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center">
             <FiDollarSign className="text-primary-500 text-lg" />
           </div>
           <div>
-            <h2 className="font-bold text-navy-900">Connection Fee</h2>
-            <p className="text-xs text-gray-500">The fee tenants pay to connect with landlords</p>
+            <h2 className="font-bold text-navy-900">Digital Key Fee</h2>
+            <p className="text-xs text-gray-500">The fee tenants pay to unlock landlord contact details</p>
           </div>
         </div>
 
@@ -79,7 +79,7 @@ const Settings = () => {
         </div>
 
         <form onSubmit={handleUpdate}>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">New Connection Fee ({'\u20A6'})</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">New Digital Key Fee ({'\u20A6'})</label>
           <div className="flex gap-3">
             <input
               type="number"
@@ -100,7 +100,7 @@ const Settings = () => {
 
         <div className="flex items-start gap-2 mt-4 bg-blue-50 rounded-xl p-3">
           <FiInfo className="text-blue-500 mt-0.5 flex-shrink-0" />
-          <p className="text-xs text-blue-700">Changes to the connection fee will apply to all new connections. Existing connections are not affected.</p>
+          <p className="text-xs text-blue-700">Changes to the Digital Key fee will apply to all new transactions. Existing connections are not affected.</p>
         </div>
       </div>
 
