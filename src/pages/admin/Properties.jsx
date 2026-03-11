@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { FiHome, FiSearch } from 'react-icons/fi';
-import { getAllProperties } from '../../services/adminService';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiHome, FiSearch, FiTrash2, FiAlertTriangle } from 'react-icons/fi';
+import { getAllProperties, deleteAdminProperty } from '../../services/adminService';
+import toast from 'react-hot-toast';
 
 const formatPrice = (amount) => new Intl.NumberFormat('en-NG').format(amount);
 
@@ -16,6 +17,8 @@ const Properties = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const fetch = async () => {
@@ -30,6 +33,21 @@ const Properties = () => {
     };
     fetch();
   }, []);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await deleteAdminProperty(deleteTarget.id);
+      setProperties(prev => prev.filter(p => p.id !== deleteTarget.id));
+      toast.success('Property deleted');
+      setDeleteTarget(null);
+    } catch (err) {
+      toast.error(err.message || 'Failed to delete property');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const filtered = properties.filter(p => {
     const matchesSearch = !search || p.property_name.toLowerCase().includes(search.toLowerCase()) || p.area?.toLowerCase().includes(search.toLowerCase());
@@ -84,6 +102,7 @@ const Properties = () => {
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase hidden lg:table-cell">Landlord</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Price/Year</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
+                  <th className="px-6 py-3" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -114,6 +133,15 @@ const Properties = () => {
                         {statusConfig[prop.status]?.label || prop.status}
                       </span>
                     </td>
+                    <td className="px-6 py-4 text-right">
+                      <button
+                        onClick={() => setDeleteTarget(prop)}
+                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors bg-transparent border-0 cursor-pointer"
+                        title="Delete property"
+                      >
+                        <FiTrash2 className="text-sm" />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -127,6 +155,56 @@ const Properties = () => {
           )}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {deleteTarget && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/50"
+              onClick={() => !deleting && setDeleteTarget(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative bg-white rounded-2xl shadow-xl max-w-md w-full p-6"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <FiAlertTriangle className="text-xl text-red-600" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-navy-900">Delete Property</h3>
+                  <p className="text-sm text-gray-500">This action cannot be undone.</p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 mb-6">
+                Are you sure you want to delete <strong>{deleteTarget.property_name}</strong>? All associated images and data will be permanently removed.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setDeleteTarget(null)}
+                  disabled={deleting}
+                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors bg-white cursor-pointer disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-semibold transition-colors border-0 cursor-pointer disabled:opacity-50"
+                >
+                  {deleting ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
