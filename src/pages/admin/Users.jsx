@@ -7,7 +7,6 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     const fetch = async () => {
@@ -23,38 +22,30 @@ const Users = () => {
     fetch();
   }, []);
 
-  const filtered = users.filter(u => {
-    const matchesSearch = !search || u.full_name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase());
-    const matchesFilter = filter === 'all' || u.role === filter;
-    return matchesSearch && matchesFilter;
-  });
+  const filtered = users.filter(u =>
+    !search || u.full_name?.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase())
+  );
 
   const counts = {
     all: users.length,
-    landlord: users.filter(u => u.role === 'landlord').length,
-    tenant: users.filter(u => u.role === 'tenant').length,
   };
 
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-navy-900">Users</h1>
-        <p className="text-gray-500 text-sm mt-1">{users.length} registered users</p>
+        <h1 className="text-2xl font-bold text-navy-900">Landlords</h1>
+        <p className="text-gray-500 text-sm mt-1">{users.length} registered landlords</p>
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div className="bg-white rounded-2xl p-5 shadow-sm">
           <p className="text-2xl font-bold text-navy-900">{counts.all}</p>
-          <p className="text-xs text-gray-500">Total Users</p>
+          <p className="text-xs text-gray-500">Total Landlords</p>
         </div>
         <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <p className="text-2xl font-bold text-navy-900">{counts.landlord}</p>
-          <p className="text-xs text-gray-500">Landlords</p>
-        </div>
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <p className="text-2xl font-bold text-navy-900">{counts.tenant}</p>
-          <p className="text-xs text-gray-500">Tenants</p>
+          <p className="text-2xl font-bold text-navy-900">{users.filter(u => u.properties_count > 0).length}</p>
+          <p className="text-xs text-gray-500">With Properties</p>
         </div>
       </div>
 
@@ -63,14 +54,12 @@ const Users = () => {
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search users..." className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent" />
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search landlords..." className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent" />
           </div>
           <div className="flex gap-1 bg-gray-100 p-1 rounded-xl">
-            {['all', 'landlord', 'tenant'].map((key) => (
-              <button key={key} onClick={() => setFilter(key)} className={`px-4 py-2 rounded-lg text-xs font-medium transition-all border-0 cursor-pointer capitalize ${filter === key ? 'bg-white text-navy-900 shadow-sm' : 'text-gray-500 bg-transparent'}`}>
-                {key === 'all' ? 'All' : key + 's'} ({counts[key]})
-              </button>
-            ))}
+            <button className="px-4 py-2 rounded-lg text-xs font-medium bg-white text-navy-900 shadow-sm border-0">
+              All ({counts.all})
+            </button>
           </div>
         </div>
       </div>
@@ -86,7 +75,7 @@ const Users = () => {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-100">
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">User</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Landlord</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">Contact</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Role</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Properties</th>
@@ -133,7 +122,7 @@ const Users = () => {
           {filtered.length === 0 && (
             <div className="p-12 text-center">
               <FiUsers className="text-3xl text-gray-300 mx-auto mb-2" />
-              <p className="text-gray-500 text-sm">No users found</p>
+              <p className="text-gray-500 text-sm">No landlords found</p>
             </div>
           )}
         </div>

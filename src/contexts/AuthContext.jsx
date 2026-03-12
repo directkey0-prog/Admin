@@ -9,8 +9,13 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const stored = localStorage.getItem('admin_user');
-    if (stored) {
+    const token = localStorage.getItem('admin_token');
+    if (stored && token) {
       try { setAdmin(JSON.parse(stored)); } catch { localStorage.removeItem('admin_user'); }
+    } else {
+      // Clear stale session with no token
+      localStorage.removeItem('admin_user');
+      localStorage.removeItem('admin_token');
     }
     setLoading(false);
   }, []);

@@ -118,15 +118,15 @@ const Settings = () => {
           </div>
           <div className="flex items-center justify-between py-2 border-b border-gray-100">
             <span className="text-sm text-gray-600">Admin Email</span>
-            <span className="text-sm font-medium text-navy-900">admin@directkey.com</span>
+            <span className="text-sm font-medium text-navy-900">directkey0@gmail.com</span>
           </div>
           <div className="flex items-center justify-between py-2 border-b border-gray-100">
             <span className="text-sm text-gray-600">Payment Provider</span>
-            <span className="text-sm font-medium text-navy-900">Paystack (Mock)</span>
+            <span className="text-sm font-medium text-navy-900">Paystack</span>
           </div>
           <div className="flex items-center justify-between py-2">
             <span className="text-sm text-gray-600">Database</span>
-            <span className="text-sm font-medium text-navy-900">Supabase (Mock Data)</span>
+            <span className="text-sm font-medium text-navy-900">Supabase</span>
           </div>
         </div>
       </div>

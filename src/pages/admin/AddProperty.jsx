@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FiCheck } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiCheck, FiAlertCircle } from 'react-icons/fi';
 import { createAdminProperty } from '../../services/adminService';
 import ImageUploader from '../../components/ImageUploader';
 import toast from 'react-hot-toast';
-import { ADMIN_CATEGORIES, APARTMENT_SUB_TYPES } from '../../utils/propertyTypes';
+import { ADMIN_CATEGORIES, APARTMENT_SUB_TYPES, getTypeDisplay } from '../../utils/propertyTypes';
 
 const allAmenities = [
   '24hr Security', 'Parking Space', 'Water Supply', 'Electricity', 'Fitted Kitchen',
@@ -18,7 +18,7 @@ const eventHallAmenities = [
   'CCTV', 'Outdoor Space', 'Bar Area',
 ];
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = `${import.meta.env.VITE_BACKEND_URL}/api`;
 
 const AddProperty = () => {
   const navigate = useNavigate();
@@ -45,6 +45,7 @@ const AddProperty = () => {
   });
   const [locationData, setLocationData] = useState({ states: [], lgas: [] });
   const [errors, setErrors] = useState({});
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const isLand = form.property_category === 'land';
   const isShortlet = form.property_category === 'shortlet';
@@ -69,7 +70,7 @@ const AddProperty = () => {
     if (form.state) {
       const loadLGAs = async () => {
         try {
-          const res = await fetch(`${API_BASE}/locations/lgas?state=${encodeURIComponent(form.state)}`);
+          const res = await fetch(`${API_BASE}/locations/lgas/${encodeURIComponent(form.state)}`);
           const data = await res.json();
           setLocationData(prev => ({ ...prev, lgas: Array.isArray(data) ? data : [] }));
         } catch {
@@ -121,17 +122,34 @@ const AddProperty = () => {
     if (!form.state) errs.state = 'Required';
     if (!form.local_government) errs.local_government = 'Required';
     if (!form.area.trim()) errs.area = 'Required';
+    const doneImages = uploadedImages.filter(img => img.status === 'done');
+    if (doneImages.length === 0) errs.images = 'At least one image is required';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validate()) { toast.error('Please fill in all required fields'); return; }
+    if (!validate()) {
+      toast.error('Please fill in all required fields');
+      setTimeout(() => document.querySelector('.border-red-300')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+      return;
+    }
+    setShowConfirm(true);
+  };
+
+  const handleConfirm = async () => {
+    const anyUploading = uploadedImages.some(img => img.status === 'uploading');
+    if (anyUploading) {
+      toast.error('Please wait for images to finish uploading');
+      return;
+    }
+    setShowConfirm(false);
     setLoading(true);
     try {
-      const imageList = uploadedImages.length > 0
-        ? uploadedImages.map(img => img.preview || img.image_url)
+      const doneImages = uploadedImages.filter(img => img.status === 'done').map(img => img.url);
+      const imageList = doneImages.length > 0
+        ? doneImages
         : [`https://picsum.photos/seed/${Date.now()}/800/600`];
 
       const payload = {
@@ -162,6 +180,8 @@ const AddProperty = () => {
       setLoading(false);
     }
   };
+
+  const categoryLabel = ADMIN_CATEGORIES.find(c => c.value === form.property_category)?.label || form.property_category;
 
   const inputClass = (field) =>
     `w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent ${
@@ -370,10 +390,11 @@ const AddProperty = () => {
         )}
 
         {/* Images */}
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-          <h2 className="font-bold text-navy-900 mb-1">Property Images</h2>
-          <p className="text-xs text-gray-500 mb-4">Upload photos of the property. Leave empty to use a placeholder image.</p>
-          <ImageUploader images={uploadedImages} onChange={setUploadedImages} />
+        <div className={`bg-white rounded-2xl shadow-sm p-6 ${errors.images ? 'ring-1 ring-red-300' : ''}`}>
+          <h2 className="font-bold text-navy-900 mb-1">Property Images *</h2>
+          <p className="text-xs text-gray-500 mb-4">Upload at least one photo of the property.</p>
+          <ImageUploader images={uploadedImages} onChange={(imgs) => { setUploadedImages(imgs); if (errors.images) setErrors(prev => ({ ...prev, images: '' })); }} />
+          {errors.images && <p className="text-xs text-red-500 mt-2">{errors.images}</p>}
         </div>
 
         {/* Submit */}
@@ -393,6 +414,69 @@ const AddProperty = () => {
           )}
         </motion.button>
       </form>
+
+      {/* Confirmation Modal */}
+      <AnimatePresence>
+        {showConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center">
+                  <FiAlertCircle className="text-primary-400 text-lg" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-navy-900">Confirm & Publish</h3>
+                  <p className="text-xs text-gray-500">This will go live immediately</p>
+                </div>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-4 mb-5 space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Name</span>
+                  <span className="font-medium text-navy-900 text-right max-w-[60%]">{form.property_name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Category</span>
+                  <span className="font-medium text-navy-900">{categoryLabel}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Location</span>
+                  <span className="font-medium text-navy-900">{form.area}, {form.state}</span>
+                </div>
+                {!isShortlet && !isEventHall && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">{isLand ? 'Asking Price' : 'Annual Rent'}</span>
+                    <span className="font-medium text-navy-900">{'\u20A6'}{Number(form.price_per_year).toLocaleString()}</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowConfirm(false)}
+                  className="flex-1 py-3 rounded-xl text-sm font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 bg-white cursor-pointer transition-all"
+                >
+                  Go Back
+                </button>
+                <button
+                  onClick={handleConfirm}
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold bg-primary-400 hover:bg-primary-500 text-white border-0 cursor-pointer transition-all"
+                >
+                  Yes, Publish
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

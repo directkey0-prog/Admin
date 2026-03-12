@@ -58,7 +58,7 @@ const Login = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@directkey.com"
+                  placeholder="directkey0@gmail.com"
                   className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
                 />
               </div>
@@ -86,11 +86,6 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="mt-6 bg-navy-50 rounded-xl p-4">
-            <p className="text-xs font-medium text-navy-800 mb-2">Admin Credentials:</p>
-            <p className="text-xs text-navy-600">Email: admin@directkey.com</p>
-            <p className="text-xs text-navy-600">Password: Admin123!</p>
-          </div>
         </div>
       </div>
     </div>
