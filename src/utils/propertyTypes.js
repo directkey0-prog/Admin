@@ -18,6 +18,7 @@ export const ADMIN_CATEGORIES = [
   { value: 'shortlet', label: 'Shortlet' },
   { value: 'event_hall', label: 'Event Hall' },
   { value: 'office_space', label: 'Office Space' },
+  { value: 'shop', label: 'Shop' },
 ];
 
 export const CATEGORY_LABELS = {
@@ -26,6 +27,7 @@ export const CATEGORY_LABELS = {
   shortlet: 'Shortlet',
   event_hall: 'Event Hall',
   office_space: 'Office Space',
+  shop: 'Shop',
 };
 
 export const getTypeDisplay = (property) => {

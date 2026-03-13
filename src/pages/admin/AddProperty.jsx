@@ -51,6 +51,7 @@ const AddProperty = () => {
   const isShortlet = form.property_category === 'shortlet';
   const isEventHall = form.property_category === 'event_hall';
   const isOfficeSpace = form.property_category === 'office_space';
+  const isShop = form.property_category === 'shop';
   const isApartment = form.property_category === 'apartment_type';
 
   useEffect(() => {
@@ -165,7 +166,7 @@ const AddProperty = () => {
         min_nights: isShortlet ? parseInt(form.min_nights) : 0,
         land_area: isLand ? parseFloat(form.land_area) : null,
         land_unit: isLand ? form.land_unit : null,
-        amenities: (isLand || isOfficeSpace) ? [] : form.amenities,
+        amenities: (isLand || isOfficeSpace || isShop) ? [] : form.amenities,
         images: imageList,
         status: 'approved',
         added_by: 'admin',
@@ -309,7 +310,7 @@ const AddProperty = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  {isOfficeSpace ? 'Number of Rooms *' : 'Bedrooms *'}
+                  {isOfficeSpace ? 'Number of Rooms *' : isShop ? 'Number of Units *' : 'Bedrooms *'}
                 </label>
                 <select value={form.bedrooms} onChange={(e) => updateField('bedrooms', e.target.value)} className={inputClass('bedrooms')}>
                   <option value="">Select</option>
@@ -366,8 +367,8 @@ const AddProperty = () => {
           </div>
         </div>
 
-        {/* Amenities — not for Land or Office Space */}
-        {!isLand && !isOfficeSpace && (
+        {/* Amenities — not for Land, Office Space, or Shop */}
+        {!isLand && !isOfficeSpace && !isShop && (
           <div className="bg-white rounded-2xl shadow-sm p-6">
             <h2 className="font-bold text-navy-900 mb-4">{isEventHall ? 'Event Hall Facilities' : 'Amenities'}</h2>
             <div className="flex flex-wrap gap-2">

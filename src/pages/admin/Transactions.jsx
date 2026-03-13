@@ -5,6 +5,13 @@ import { getAllTransactions } from '../../services/adminService';
 
 const formatPrice = (amount) => new Intl.NumberFormat('en-NG').format(amount);
 
+const formatCompact = (amount) => {
+  if (amount >= 1_000_000_000) return `${(amount / 1_000_000_000).toFixed(1).replace(/\.0$/, '')}B`;
+  if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (amount >= 1_000) return `${(amount / 1_000).toFixed(1).replace(/\.0$/, '')}K`;
+  return formatPrice(amount);
+};
+
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +51,7 @@ const Transactions = () => {
       {/* Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <p className="text-2xl font-bold text-navy-900">{'\u20A6'}{formatPrice(totalRevenue)}</p>
+          <p className="text-2xl font-bold text-navy-900 truncate">{'\u20A6'}{formatCompact(totalRevenue)}</p>
           <p className="text-xs text-gray-500">Total Revenue</p>
         </div>
         <div className="bg-white rounded-2xl p-5 shadow-sm">
@@ -52,7 +59,7 @@ const Transactions = () => {
           <p className="text-xs text-gray-500">Total Payments</p>
         </div>
         <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <p className="text-2xl font-bold text-navy-900">{'\u20A6'}{formatPrice(transactions.length > 0 ? totalRevenue / transactions.length : 0)}</p>
+          <p className="text-2xl font-bold text-navy-900 truncate">{'\u20A6'}{formatCompact(transactions.length > 0 ? Math.round(totalRevenue / transactions.length) : 0)}</p>
           <p className="text-xs text-gray-500">Average Payment</p>
         </div>
       </div>
