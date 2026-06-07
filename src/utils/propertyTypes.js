@@ -14,20 +14,20 @@ export const APARTMENT_SUB_TYPES = [
 
 export const ADMIN_CATEGORIES = [
   { value: 'apartment_type', label: 'Apartment Type' },
-  { value: 'land', label: 'Land' },
-  { value: 'shortlet', label: 'Shortlet' },
-  { value: 'event_hall', label: 'Event Hall' },
-  { value: 'office_space', label: 'Office Space' },
-  { value: 'shop', label: 'Shop' },
+  { value: 'land', label: 'Lands' },
+  { value: 'shortlet', label: 'Shortlets' },
+  { value: 'event_hall', label: 'Event Halls' },
+  { value: 'office_space', label: 'Office Spaces' },
+  { value: 'shop', label: 'Shops' },
 ];
 
 export const CATEGORY_LABELS = {
   apartment_type: 'Apartment',
-  land: 'Land',
-  shortlet: 'Shortlet',
-  event_hall: 'Event Hall',
-  office_space: 'Office Space',
-  shop: 'Shop',
+  land: 'Lands',
+  shortlet: 'Shortlets',
+  event_hall: 'Event Halls',
+  office_space: 'Office Spaces',
+  shop: 'Shops',
 };
 
 export const getTypeDisplay = (property) => {
