@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiDollarSign, FiSearch, FiDownload } from 'react-icons/fi';
+import { FiSearch, FiDownload } from 'react-icons/fi';
+import { TbCurrencyNaira } from 'react-icons/tb';
 import { getAllTransactions } from '../../services/adminService';
 
 const formatPrice = (amount) => new Intl.NumberFormat('en-NG').format(amount);
@@ -122,7 +123,7 @@ const Transactions = () => {
           </div>
           {filtered.length === 0 && (
             <div className="p-12 text-center">
-              <FiDollarSign className="text-3xl text-gray-300 mx-auto mb-2" />
+              <TbCurrencyNaira className="text-3xl text-gray-300 mx-auto mb-2" />
               <p className="text-gray-500 text-sm">No transactions found</p>
             </div>
           )}

@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FiGrid, FiCheckSquare, FiHome, FiUsers, FiDollarSign, FiSettings, FiLogOut, FiMenu, FiX, FiShield, FiStar, FiSend, FiPlusSquare } from 'react-icons/fi';
+import { FiGrid, FiCheckSquare, FiHome, FiUsers, FiSettings, FiLogOut, FiMenu, FiX, FiShield, FiStar, FiSend, FiPlusSquare } from 'react-icons/fi';
+import { TbCurrencyNaira } from 'react-icons/tb';
 import { useState } from 'react';
 import { useAdminAuth } from '../contexts/AuthContext';
 
@@ -9,7 +10,7 @@ const navItems = [
   { name: 'All Properties', path: '/properties', icon: FiHome },
   { name: 'Add Property', path: '/add-property', icon: FiPlusSquare },
   { name: 'Users', path: '/users', icon: FiUsers },
-  { name: 'Transactions', path: '/transactions', icon: FiDollarSign },
+  { name: 'Transactions', path: '/transactions', icon: TbCurrencyNaira },
   { name: 'Testimonials', path: '/testimonials', icon: FiStar },
   { name: 'Newsletter', path: '/newsletter', icon: FiSend },
   { name: 'Settings', path: '/settings', icon: FiSettings },

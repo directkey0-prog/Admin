@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiHome, FiCheckCircle, FiClock, FiXCircle, FiUsers, FiDollarSign, FiArrowRight, FiTrendingUp } from 'react-icons/fi';
+import { FiHome, FiCheckCircle, FiClock, FiXCircle, FiUsers, FiArrowRight, FiTrendingUp } from 'react-icons/fi';
+import { TbCurrencyNaira } from 'react-icons/tb';
 import { getStatistics, getPendingProperties, getAllTransactions } from '../../services/adminService';
 
 const formatPrice = (amount) => new Intl.NumberFormat('en-NG').format(amount);
@@ -47,7 +48,7 @@ const Dashboard = () => {
     { label: 'Total Properties', value: stats?.totalProperties || 0, icon: FiHome, color: 'bg-blue-50 text-blue-600', sub: `${stats?.approvedProperties || 0} approved` },
     { label: 'Pending Review', value: stats?.pendingProperties || 0, icon: FiClock, color: 'bg-yellow-50 text-yellow-600', sub: 'Awaiting approval' },
     { label: 'Total Users', value: stats?.totalUsers || 0, icon: FiUsers, color: 'bg-purple-50 text-purple-600', sub: `${stats?.totalLandlords || 0} landlords, ${stats?.totalTenants || 0} tenants` },
-    { label: 'Total Revenue', value: `\u20A6${formatPrice(stats?.totalRevenue || 0)}`, icon: FiDollarSign, color: 'bg-green-50 text-green-600', sub: `${stats?.totalTransactions || 0} transactions` },
+    { label: 'Total Revenue', value: `\u20A6${formatPrice(stats?.totalRevenue || 0)}`, icon: TbCurrencyNaira, color: 'bg-green-50 text-green-600', sub: `${stats?.totalTransactions || 0} transactions` },
   ];
 
   return (

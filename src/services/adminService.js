@@ -147,3 +147,10 @@ export const getSubscribers = async () => {
 export const removeSubscriber = async (id) => {
   return apiCall(`/admin/newsletter/subscribers/${id}`, { method: 'DELETE' });
 };
+
+export const changeAdminPassword = async (current_password, new_password) => {
+  return apiCall('/admin/change-password', {
+    method: 'PUT',
+    body: JSON.stringify({ current_password, new_password }),
+  });
+};

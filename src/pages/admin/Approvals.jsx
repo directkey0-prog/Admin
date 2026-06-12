@@ -58,7 +58,7 @@ const DetailModal = ({ property: prop, onClose, onApprove, onReject, processing 
               <img
                 src={images[imgIndex]?.image_url}
                 alt={`Image ${imgIndex + 1}`}
-                className="w-full h-64 object-cover"
+                className="w-full h-80 object-cover"
               />
               {images.length > 1 && (
                 <>
