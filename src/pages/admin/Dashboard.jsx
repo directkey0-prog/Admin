@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiHome, FiCheckCircle, FiClock, FiXCircle, FiUsers, FiArrowRight, FiTrendingUp } from 'react-icons/fi';
-import { TbCurrencyNaira } from 'react-icons/tb';
-import { getStatistics, getPendingProperties, getAllTransactions } from '../../services/adminService';
+import { FiCheckCircle, FiArrowRight, FiTrendingUp } from 'react-icons/fi';
+import { getPendingProperties, getAllTransactions } from '../../services/adminService';
 
 const formatPrice = (amount) => new Intl.NumberFormat('en-NG').format(amount);
 
 const Dashboard = () => {
-  const [stats, setStats] = useState(null);
   const [pending, setPending] = useState([]);
   const [recentTx, setRecentTx] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,12 +14,10 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const [statsData, pendingData, txData] = await Promise.all([
-          getStatistics(),
+        const [pendingData, txData] = await Promise.all([
           getPendingProperties(),
           getAllTransactions(),
         ]);
-        setStats(statsData);
         setPending(pendingData);
         setRecentTx(txData.slice(0, 5));
       } catch (err) {
@@ -37,45 +33,18 @@ const Dashboard = () => {
     return (
       <div className="space-y-6">
         <div className="h-8 bg-gray-200 rounded w-1/3 animate-pulse" />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => <div key={i} className="bg-white rounded-2xl p-5 animate-pulse"><div className="h-20" /></div>)}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {[...Array(2)].map((_, i) => <div key={i} className="bg-white rounded-2xl p-5 animate-pulse"><div className="h-40" /></div>)}
         </div>
       </div>
     );
   }
-
-  const statCards = [
-    { label: 'Total Properties', value: stats?.totalProperties || 0, icon: FiHome, color: 'bg-blue-50 text-blue-600', sub: `${stats?.approvedProperties || 0} approved` },
-    { label: 'Pending Review', value: stats?.pendingProperties || 0, icon: FiClock, color: 'bg-yellow-50 text-yellow-600', sub: 'Awaiting approval' },
-    { label: 'Total Users', value: stats?.totalUsers || 0, icon: FiUsers, color: 'bg-purple-50 text-purple-600', sub: `${stats?.totalLandlords || 0} landlords, ${stats?.totalTenants || 0} tenants` },
-    { label: 'Total Revenue', value: `\u20A6${formatPrice(stats?.totalRevenue || 0)}`, icon: TbCurrencyNaira, color: 'bg-green-50 text-green-600', sub: `${stats?.totalTransactions || 0} transactions` },
-  ];
 
   return (
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-navy-900">Admin Dashboard</h1>
         <p className="text-gray-500 text-sm mt-1">Platform overview and management</p>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {statCards.map((stat, i) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="bg-white rounded-2xl p-5 shadow-sm"
-          >
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${stat.color}`}>
-              <stat.icon className="text-lg" />
-            </div>
-            <p className="text-2xl font-bold text-navy-900">{stat.value}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{stat.label}</p>
-            <p className="text-xs text-gray-400 mt-1">{stat.sub}</p>
-          </motion.div>
-        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
